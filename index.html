@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operator Code Quiz</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f172a;
+        --panel: #111827;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --ok: #22c55e;
+        --bad: #ef4444;
+        --accent: #38bdf8;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        height: 100dvh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(56, 189, 248, 0.15),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 80% 30%,
+            rgba(34, 197, 94, 0.1),
+            transparent 42%
+          ),
+          radial-gradient(
+            circle at 50% 80%,
+            rgba(139, 92, 246, 0.12),
+            transparent 45%
+          ),
+          linear-gradient(120deg, #0f172a, #0b1120, #111827, #0f172a);
+        background-size: 140% 140%;
+        animation: codePulse 14s ease-in-out infinite;
+        color: var(--text);
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      body::before {
+        content: "def quiz():  print(answer)  # python  x = y + z  if score > 3:";
+        position: fixed;
+        inset: auto -20% -12% -20%;
+        color: rgba(148, 163, 184, 0.08);
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: clamp(14px, 2vw, 20px);
+        letter-spacing: 2px;
+        white-space: nowrap;
+        pointer-events: none;
+        animation: codeDrift 22s linear infinite;
+        z-index: 0;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+        background-size: 36px 36px;
+        mask-image: radial-gradient(
+          circle at center,
+          black 35%,
+          transparent 95%
+        );
+        pointer-events: none;
+        opacity: 0.35;
+        animation: gridFloat 18s linear infinite;
+        z-index: 0;
+      }
+
+      .card {
+        position: relative;
+        box-sizing: border-box;
+        z-index: 1;
+        width: min(680px, calc(100vw - 40px));
+        padding: 24px;
+        background: linear-gradient(180deg, #111827, #0b1220);
+        border: 1px solid #1f2937;
+        border-radius: 16px;
+
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      @keyframes codePulse {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes codeDrift {
+        0% {
+          transform: translateX(0) translateY(0);
+        }
+        50% {
+          transform: translateX(-5%) translateY(-10px);
+        }
+        100% {
+          transform: translateX(-10%) translateY(0);
+        }
+      }
+
+      @keyframes gridFloat {
+        0% {
+          transform: translate3d(0, 0, 0);
+        }
+        100% {
+          transform: translate3d(-36px, -36px, 0);
+        }
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        color: #f8fafc;
+      }
+
+      p {
+        margin: 0 0 18px;
+        color: var(--muted);
+      }
+
+      .editor {
+        margin: 12px 0 18px;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #0b1325;
+      }
+
+      .editor-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background: #111827;
+        border-bottom: 1px solid #334155;
+        color: #cbd5e1;
+        font-size: 0.85rem;
+      }
+
+      .editor-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .editor-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .editor-dot.red {
+        background: #ef4444;
+      }
+
+      .editor-dot.yellow {
+        background: #f59e0b;
+      }
+
+      .editor-dot.green {
+        background: #22c55e;
+      }
+
+      .editor-file {
+        opacity: 0.9;
+      }
+
+      .question {
+        margin: 0;
+        padding: 14px;
+        font-size: 1rem;
+        line-height: 1.55;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        white-space: pre-wrap;
+      }
+
+      .code-comment {
+        color: #6a9955;
+      }
+
+      .controls {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #0b1220;
+        background: var(--accent);
+      }
+
+      button.secondary {
+        background: #94a3b8;
+      }
+
+      button.hidden {
+        display: none;
+      }
+
+      .option-btn {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 130px;
+        text-align: left;
+        color: var(--text);
+        background: #0b1325;
+        border: 1px solid #334155;
+      }
+
+      .option-btn:hover {
+        border-color: #475569;
+        background: #111b34;
+      }
+
+      .option-btn.correct {
+        border-color: #16a34a;
+        background: rgba(34, 197, 94, 0.2);
+      }
+
+      .option-btn.wrong {
+        border-color: #dc2626;
+        background: rgba(239, 68, 68, 0.2);
+      }
+
+      .result {
+        min-height: 24px;
+        margin-top: 8px;
+        font-weight: 700;
+      }
+
+      .ok {
+        color: var(--ok);
+      }
+
+      .bad {
+        color: var(--bad);
+      }
+
+      .stats {
+        margin-top: 14px;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        color: #cbd5e1;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Operations with Python</h1>
+      <p>
+        Read the code and choose the output.
+      </p>
+
+      <div class="editor">
+        <div class="editor-topbar">
+          <div class="editor-dots">
+            <span class="editor-dot red"></span>
+            <span class="editor-dot yellow"></span>
+            <span class="editor-dot green"></span>
+          </div>
+          <span class="editor-file">question.py</span>
+        </div>
+        <pre id="question" class="question">Loading question...</pre>
+      </div>
+
+      <div id="options" class="controls"></div>
+      <button id="nextBtn" class="secondary">New Random Question</button>
+
+      <div id="result" class="result"></div>
+
+      <div class="stats">
+        <span id="score">Score: 0</span>
+        <span id="total">Total: 0</span>
+        <span id="accuracy">Accuracy: 0%</span>
+        <span id="streak">Streak: 0</span>
+        <span id="level">Level: 1</span>
+      </div>
+    </main>
+
+    <script>
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const resultEl = document.getElementById("result");
+      const scoreEl = document.getElementById("score");
+      const totalEl = document.getElementById("total");
+      const accuracyEl = document.getElementById("accuracy");
+      const streakEl = document.getElementById("streak");
+      const levelEl = document.getElementById("level");
+      const nextBtn = document.getElementById("nextBtn");
+
+      let currentAnswer = "";
+      let currentOptions = [];
+      let score = 0;
+      let total = 0;
+      let streak = 0;
+      let level = 1;
+      let canAnswer = true;
+      let audioContext = null;
+
+      function getAudioContext() {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+        return audioContext;
+      }
+
+      function playTone(frequency, duration, type, startTime, gainValue) {
+        const ctx = getAudioContext();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, startTime);
+
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.exponentialRampToValueAtTime(gainValue, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(
+          0.0001,
+          startTime + duration
+        );
+
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+      }
+
+      function playCorrectSound() {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        playTone(523.25, 0.16, "triangle", now, 0.12);
+        playTone(659.25, 0.18, "triangle", now + 0.12, 0.12);
+        playTone(783.99, 0.24, "triangle", now + 0.24, 0.14);
+      }
+
+      function playWrongSound() {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        playTone(260, 0.2, "sine", now, 0.12);
+        playTone(220, 0.22, "sine", now + 0.14, 0.11);
+        playTone(174.61, 0.28, "sine", now + 0.28, 0.1);
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+      }
+
+      function renderQuestionCode(text) {
+        return text
+          .split("\n")
+          .map((line) => {
+            const escaped = escapeHtml(line);
+            if (line.trimStart().startsWith("#")) {
+              return `<span class="code-comment">${escaped}</span>`;
+            }
+            return escaped;
+          })
+          .join("\n");
+      }
+
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function pickRandom(list) {
+        return list[randomInt(0, list.length - 1)];
+      }
+
+      function shuffle(list) {
+        const clone = [...list];
+        for (let i = clone.length - 1; i > 0; i -= 1) {
+          const j = randomInt(0, i);
+          [clone[i], clone[j]] = [clone[j], clone[i]];
+        }
+        return clone;
+      }
+
+      function createNearbyNumbers(correct, rangeHint = 10) {
+        const num = Number(correct);
+        const wrongs = new Set();
+        const maxDelta = Math.max(4, Math.floor(rangeHint / 3));
+        while (wrongs.size < 3) {
+          const delta = randomInt(1, maxDelta);
+          const sign = Math.random() < 0.5 ? -1 : 1;
+          const candidateNumber = Math.max(0, num + sign * delta);
+          const candidate = String(candidateNumber);
+          if (candidate !== String(correct)) {
+            wrongs.add(candidate);
+          }
+        }
+        return [...wrongs];
+      }
+
+      function createOptions(correct, rangeHint) {
+        if (typeof correct === "boolean") {
+          return shuffle(["true", "false"]);
+        }
+        const wrongs = createNearbyNumbers(correct, rangeHint);
+        return shuffle([String(correct), ...wrongs]);
+      }
+
+      function renderOptions() {
+        optionsEl.innerHTML = "";
+        currentOptions.forEach((option) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "option-btn";
+          btn.textContent = option;
+          btn.addEventListener("click", () => selectAnswer(option, btn));
+          optionsEl.appendChild(btn);
+        });
+      }
+
+      function disableOptions() {
+        const optionButtons = optionsEl.querySelectorAll("button");
+        optionButtons.forEach((btn) => {
+          btn.disabled = true;
+        });
+      }
+
+      function markCorrectAnswer() {
+        const optionButtons = optionsEl.querySelectorAll("button");
+        optionButtons.forEach((btn) => {
+          if (btn.textContent === currentAnswer) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+
+      function makePowerQuestion(maxBase, maxExp) {
+        const base = randomInt(2, maxBase);
+        const exponent = randomInt(2, maxExp);
+        return {
+          text: `# Exponent operator\nx = ${base}\ny = ${exponent}\nprint(x ** y)\n# What is the output?`,
+          answer: base ** exponent,
+          rangeHint: Math.max(20, base ** exponent),
+        };
+      }
+
+      function makeAndQuestion() {
+        const a = Math.random() < 0.5;
+        const b = Math.random() < 0.5;
+        return {
+          text: `# Logical AND\nlet a = ${a};\nlet b = ${b};\nconsole.log(a && b);\n# What is the output?`,
+          answer: a && b,
+          rangeHint: 2,
+        };
+      }
+
+      function makeOrQuestion() {
+        const a = Math.random() < 0.5;
+        const b = Math.random() < 0.5;
+        return {
+          text: `# Logical OR\nlet a = ${a};\nlet b = ${b};\nconsole.log(a || b);\n# What is the output?`,
+          answer: a || b,
+          rangeHint: 2,
+        };
+      }
+
+      function makeAddQuestion(maxNum) {
+        const a = randomInt(5, maxNum);
+        const b = randomInt(5, maxNum);
+        return {
+          text: `# Add numbers\nx = ${a}\ny = ${b}\nprint(x + y)\n# What is the output?`,
+          answer: a + b,
+          rangeHint: maxNum * 2,
+        };
+      }
+
+      function makeSubtractQuestion(maxNum) {
+        const a = randomInt(Math.floor(maxNum / 2), maxNum);
+        const b = randomInt(1, a);
+        return {
+          text: `# Subtract numbers\nx = ${a}\ny = ${b}\nprint(x - y)\n# What is the output?`,
+          answer: a - b,
+          rangeHint: maxNum,
+        };
+      }
+
+      function makeMultiplyQuestion(maxNum) {
+        const a = randomInt(2, maxNum);
+        const b = randomInt(2, maxNum);
+        return {
+          text: `# Multiply numbers\nx = ${a}\ny = ${b}\nprint(x * y)\n# What is the output?`,
+          answer: a * b,
+          rangeHint: maxNum * maxNum,
+        };
+      }
+
+      function makeIntDivisionQuestion(maxNum) {
+        const divisor = randomInt(2, maxNum);
+        const quotient = randomInt(2, maxNum);
+        const dividend = divisor * quotient;
+        return {
+          text: `# Integer division\na = ${dividend}\nb = ${divisor}\nprint(a // b)\n# What is the output?`,
+          answer: quotient,
+          rangeHint: maxNum * 2,
+        };
+      }
+
+      function getQuestionByLevel() {
+        if (level === 1) {
+          return pickRandom([
+            () => makeAddQuestion(25),
+            () => makeSubtractQuestion(25),
+            () => makePowerQuestion(5, 2),
+            () => makeAndQuestion(),
+            () => makeOrQuestion(),
+          ])();
+        }
+
+        if (level === 2) {
+          return pickRandom([
+            () => makeAddQuestion(60),
+            () => makeSubtractQuestion(60),
+            () => makeMultiplyQuestion(10),
+            () => makeIntDivisionQuestion(10),
+            () => makePowerQuestion(7, 3),
+            () => makeAndQuestion(),
+            () => makeOrQuestion(),
+          ])();
+        }
+
+        return pickRandom([
+          () => makeMultiplyQuestion(12),
+          () => makeIntDivisionQuestion(12),
+          () => makePowerQuestion(9, 3),
+          () => makeAndQuestion(),
+          () => makeOrQuestion(),
+        ])();
+      }
+
+      function updateLevel() {
+        if (streak >= 8) {
+          level = 3;
+        } else if (streak >= 4) {
+          level = 2;
+        } else {
+          level = 1;
+        }
+      }
+
+      function generateQuestion() {
+        resultEl.textContent = "";
+        resultEl.className = "result";
+        nextBtn.classList.add("hidden");
+        canAnswer = true;
+        updateLevel();
+        const q = getQuestionByLevel();
+        questionEl.innerHTML = renderQuestionCode(q.text);
+        currentAnswer = String(q.answer).toLowerCase();
+        currentOptions = createOptions(q.answer, q.rangeHint);
+        renderOptions();
+      }
+
+      function normalize(value) {
+        return value.trim();
+      }
+
+      function updateStats() {
+        scoreEl.textContent = `Score: ${score}`;
+        totalEl.textContent = `Total: ${total}`;
+        const percent = total === 0 ? 0 : Math.round((score / total) * 100);
+        accuracyEl.textContent = `Accuracy: ${percent}%`;
+        streakEl.textContent = `Streak: ${streak}`;
+        levelEl.textContent = `Level: ${level}`;
+      }
+
+      function selectAnswer(selectedValue, selectedButton) {
+        if (!canAnswer) {
+          return;
+        }
+        canAnswer = false;
+        total += 1;
+        if (normalize(selectedValue) === currentAnswer) {
+          score += 1;
+          streak += 1;
+          playCorrectSound();
+          resultEl.textContent = "Correct answer!";
+          resultEl.className = "result ok";
+          selectedButton.classList.add("correct");
+          disableOptions();
+          updateStats();
+          setTimeout(generateQuestion, 700);
+        } else {
+          streak = 0;
+          playWrongSound();
+          selectedButton.classList.add("wrong");
+          markCorrectAnswer();
+          disableOptions();
+          nextBtn.classList.remove("hidden");
+          resultEl.textContent = `Wrong answer. Correct answer: ${currentAnswer}`;
+          resultEl.className = "result bad";
+          updateStats();
+        }
+      }
+
+      nextBtn.addEventListener("click", generateQuestion);
+
+      updateStats();
+      generateQuestion();
+    </script>
+  </body>
+</html>
