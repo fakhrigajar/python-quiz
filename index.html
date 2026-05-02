@@ -530,14 +530,12 @@
     <main class="card">
       <section id="screenHome" class="home-screen" aria-label="Home">
         <h1>Welcome to the quiz</h1>
-        <p>
-          Choose a game to start.
-        </p>
+        <p>Choose a game to start.</p>
 
         <div class="home-actions" aria-label="Games">
-          <button id="startQuizBtn" type="button">Start Random Quiz</button>
+          <button id="startQuizBtn" type="button">Quiz</button>
           <button id="startPointsBtn" class="secondary" type="button">
-            Start Points Game
+            Points Game
           </button>
         </div>
       </section>
@@ -564,8 +562,14 @@
         </div>
 
         <div class="controls">
-          <div id="options" class="controls" style="margin: 0; width: 100%"></div>
-          <button id="nextBtn" class="hidden" type="button">Next Question</button>
+          <div
+            id="options"
+            class="controls"
+            style="margin: 0; width: 100%"
+          ></div>
+          <button id="nextBtn" class="hidden" type="button">
+            Next Question
+          </button>
         </div>
 
         <div id="result" class="result"></div>
@@ -581,7 +585,9 @@
       >
         <div class="screen-topbar">
           <div class="screen-title">Points Game</div>
-          <button id="homeFromPoints" class="home-btn" type="button">Home</button>
+          <button id="homeFromPoints" class="home-btn" type="button">
+            Home
+          </button>
         </div>
         <div class="bb-top">
           <div class="bb-score">
@@ -590,7 +596,9 @@
             <span style="opacity: 0.9">Min 0 · Max 100</span>
           </div>
           <div class="controls" style="margin: 0">
-            <button id="bbReset" class="secondary" type="button">Reset Game</button>
+            <button id="bbReset" class="secondary" type="button">
+              Reset Game
+            </button>
           </div>
         </div>
 
@@ -601,10 +609,17 @@
 
           <div class="bb-team-center">
             <div class="controls" style="margin: 0">
-              <button id="bbTeamA" class="bb-team-btn" type="button">Team A</button>
-              <button id="bbTeamB" class="bb-team-btn" type="button">Team B</button>
+              <button id="bbTeamA" class="bb-team-btn" type="button">
+                Team A
+              </button>
+              <button id="bbTeamB" class="bb-team-btn" type="button">
+                Team B
+              </button>
             </div>
-            <span id="bbTeamHint" style="color: var(--muted); text-align: center">
+            <span
+              id="bbTeamHint"
+              style="color: var(--muted); text-align: center"
+            >
               Select a team to start.
             </span>
           </div>
@@ -617,31 +632,40 @@
         <div id="bbGrid" class="bb-grid" aria-label="Question cards"></div>
 
         <div class="result" style="margin-top: 10px; color: var(--muted)">
-          Tip: Teacher clicks <strong>Correct</strong> or <strong>Wrong</strong> to
-          add/subtract that card’s points. Score is clamped to 0–100.
+          Tip: Teacher clicks <strong>Correct</strong> or
+          <strong>Wrong</strong> to add/subtract that card’s points. Score is
+          clamped to 0–100.
         </div>
       </section>
     </main>
-
     <div id="bbModal" class="bb-modal hidden" role="dialog" aria-modal="true">
       <div class="bb-modal-content" role="document">
         <div class="bb-meta">
           <span id="bbMetaLeft">Pick a card.</span>
           <span style="display: flex; align-items: center; gap: 8px">
             <span id="bbMetaRight">Points: —</span>
-            <button id="bbClose" class="bb-close" type="button" aria-label="Close">
+            <button
+              id="bbClose"
+              class="bb-close"
+              type="button"
+              aria-label="Close"
+            >
               X
             </button>
           </span>
         </div>
-        <pre id="bbQuestion" class="question">Pick a card to show a question.</pre>
+        <pre id="bbQuestion" class="question">
+Pick a card to show a question.</pre
+        >
         <div id="bbAnswer" class="bb-answer hidden">Answer: —</div>
         <div class="bb-modal-actions">
           <button id="bbShowAnswer" class="secondary" type="button" disabled>
             Show Answer
           </button>
           <button id="bbCorrect" type="button" disabled>Correct (+)</button>
-          <button id="bbWrong" class="secondary" type="button" disabled>Wrong (−)</button>
+          <button id="bbWrong" class="secondary" type="button" disabled>
+            Wrong (−)
+          </button>
         </div>
       </div>
     </div>
@@ -662,7 +686,9 @@
 
       function getAudioContext() {
         if (!audioContext) {
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          audioContext = new (
+            window.AudioContext || window.webkitAudioContext
+          )();
         }
         if (audioContext.state === "suspended") {
           audioContext.resume();
@@ -680,10 +706,7 @@
 
         gain.gain.setValueAtTime(0.0001, startTime);
         gain.gain.exponentialRampToValueAtTime(gainValue, startTime + 0.02);
-        gain.gain.exponentialRampToValueAtTime(
-          0.0001,
-          startTime + duration
-        );
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
 
         oscillator.connect(gain);
         gain.connect(ctx.destination);
@@ -1040,7 +1063,9 @@
       function bbUpdateScoreUI() {
         bbTeamAPointsEl.textContent = `Team A: ${bbTeamPoints.A}`;
         bbTeamBPointsEl.textContent = `Team B: ${bbTeamPoints.B}`;
-        const activeLabel = bbActiveTeam ? `Active: Team ${bbActiveTeam}` : "No team selected";
+        const activeLabel = bbActiveTeam
+          ? `Active: Team ${bbActiveTeam}`
+          : "No team selected";
         bbPointsEl.textContent = activeLabel;
       }
 
@@ -1066,7 +1091,9 @@
         bbShowAnswer = false;
         bbMetaLeft.textContent = `Team ${bbActiveTeam}: Answer the question!`;
         bbMetaRight.textContent = `Points: ${q.points}`;
-        bbQuestionEl.innerHTML = renderQuestionCode(`# Points: ${q.points}\n${q.text}`);
+        bbQuestionEl.innerHTML = renderQuestionCode(
+          `# Points: ${q.points}\n${q.text}`,
+        );
         bbAnswerEl.classList.add("hidden");
         bbAnswerEl.textContent = `Answer: ${q.answer}`;
         bbShowAnswerBtn.disabled = false;
@@ -1122,7 +1149,7 @@
         bbTeamPoints[bbActiveTeam] = clamp(
           bbTeamPoints[bbActiveTeam] + delta,
           BB_MIN,
-          BB_MAX
+          BB_MAX,
         );
         bbUpdateScoreUI();
         bbMarkUsed(bbCurrent);
@@ -1132,7 +1159,9 @@
         if (!bbCurrent) return;
         bbShowAnswer = !bbShowAnswer;
         bbAnswerEl.classList.toggle("hidden", !bbShowAnswer);
-        bbShowAnswerBtn.textContent = bbShowAnswer ? "Hide Answer" : "Show Answer";
+        bbShowAnswerBtn.textContent = bbShowAnswer
+          ? "Hide Answer"
+          : "Show Answer";
       });
 
       bbCorrectBtn.addEventListener("click", () => bbApplyResult(true));
@@ -1144,7 +1173,10 @@
         bbTeamABtn.classList.remove("active");
         bbTeamBBtn.classList.remove("active");
         bbTeamHint.textContent = "Select a team to start.";
-        bbQuestions = shuffle(bbQuestionsBase).map((q) => ({ ...q, used: false }));
+        bbQuestions = shuffle(bbQuestionsBase).map((q) => ({
+          ...q,
+          used: false,
+        }));
         bbUpdateScoreUI();
         bbRenderGrid();
         bbClearCurrent();
