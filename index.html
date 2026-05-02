@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Operator Code Quiz</title>
+    <title>Welcome to the quiz</title>
     <style>
       :root {
         color-scheme: dark;
@@ -30,7 +30,7 @@
       body {
         margin: 0;
         min-height: 100vh;
-        height: 100dvh;
+        height: auto;
         display: grid;
         place-items: center;
         background:
@@ -55,7 +55,8 @@
         color: var(--text);
         padding: 20px;
         position: relative;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
 
       body::before {
@@ -284,59 +285,379 @@
         color: #cbd5e1;
         font-size: 0.95rem;
       }
+
+      .home-screen {
+        margin-bottom: 10px;
+        padding: 14px;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        background: rgba(11, 19, 37, 0.45);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .screen.hidden {
+        display: none;
+      }
+
+      .home-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      .home-actions button {
+        flex: 1 1 220px;
+        min-height: 44px;
+      }
+
+      .screen-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 6px 0 10px;
+      }
+
+      .screen-title {
+        margin: 0;
+        color: #f8fafc;
+        font-weight: 800;
+        font-size: 1rem;
+        letter-spacing: 0.2px;
+      }
+
+      .home-btn {
+        border: 1px solid #334155;
+        background: #0b1325;
+        color: var(--text);
+      }
+
+      .home-btn:hover {
+        border-color: #475569;
+        background: #111b34;
+      }
+      .bb-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 10px 0 12px;
+      }
+
+      .bb-score {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+        color: #cbd5e1;
+      }
+
+      .bb-score strong {
+        color: #f8fafc;
+        font-size: 1.1rem;
+      }
+
+      .bb-teambar {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0 12px;
+      }
+
+      .bb-team-left {
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .bb-team-right {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .bb-team-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .bb-team-btn {
+        border: 1px solid #334155;
+        background: #0b1325;
+        color: var(--text);
+      }
+
+      .bb-team-btn.active {
+        border-color: rgba(56, 189, 248, 0.9);
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+      }
+
+      .bb-team-pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid #334155;
+        background: rgba(148, 163, 184, 0.06);
+        font-weight: 700;
+        color: #e2e8f0;
+      }
+
+      @media (max-width: 640px) {
+        .bb-teambar {
+          grid-template-columns: 1fr;
+        }
+
+        .bb-team-left,
+        .bb-team-right {
+          justify-content: center;
+        }
+      }
+
+      .bb-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        margin: 12px 0 14px;
+      }
+
+      @media (max-width: 640px) {
+        .bb-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .bb-card {
+        padding: 12px 10px;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        background: linear-gradient(180deg, #0b1325, #0b1220);
+        color: #e2e8f0;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        min-height: 54px;
+      }
+
+      .bb-card:hover {
+        border-color: #475569;
+        background: linear-gradient(180deg, #111b34, #0b1220);
+      }
+
+      .bb-card.used {
+        opacity: 0.45;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+
+      .bb-card.used:hover {
+        border-color: #334155;
+        background: linear-gradient(180deg, #0b1325, #0b1220);
+      }
+
+      .bb-modal {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: rgba(2, 6, 23, 0.78);
+        z-index: 30;
+        padding: 16px;
+      }
+
+      .bb-modal.hidden {
+        display: none;
+      }
+
+      .bb-modal-content {
+        width: min(700px, calc(100vw - 32px));
+        border: 1px solid #334155;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #0b1325;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      }
+
+      .bb-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background: #111827;
+        border-bottom: 1px solid #334155;
+        color: #cbd5e1;
+        font-size: 0.85rem;
+      }
+
+      .bb-answer {
+        padding: 10px 12px;
+        border-top: 1px solid #334155;
+        color: #d1fae5;
+        background: rgba(34, 197, 94, 0.08);
+        font-weight: 700;
+      }
+
+      .bb-answer.hidden {
+        display: none;
+      }
+
+      .bb-modal-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 12px;
+        border-top: 1px solid #334155;
+      }
+
+      .bb-close {
+        border: 1px solid #334155;
+        background: #0b1325;
+        color: #e2e8f0;
+      }
+
+      .bb-close:hover {
+        border-color: #475569;
+        background: #111b34;
+      }
     </style>
   </head>
   <body>
     <main class="card">
-      <h1>Operations with Python</h1>
-      <p>
-        Read the code and choose the output.
-      </p>
+      <section id="screenHome" class="home-screen" aria-label="Home">
+        <h1>Welcome to the quiz</h1>
+        <p>
+          Choose a game to start.
+        </p>
 
-      <div class="editor">
-        <div class="editor-topbar">
-          <div class="editor-dots">
-            <span class="editor-dot red"></span>
-            <span class="editor-dot yellow"></span>
-            <span class="editor-dot green"></span>
-          </div>
-          <span class="editor-file">question.py</span>
+        <div class="home-actions" aria-label="Games">
+          <button id="startQuizBtn" type="button">Start Random Quiz</button>
+          <button id="startPointsBtn" class="secondary" type="button">
+            Start Points Game
+          </button>
         </div>
-        <pre id="question" class="question">Loading question...</pre>
-      </div>
+      </section>
 
-      <div id="options" class="controls"></div>
-      <button id="nextBtn" class="secondary">New Random Question</button>
+      <section id="screenQuiz" class="screen hidden" aria-label="Random Quiz">
+        <div class="screen-topbar">
+          <div class="screen-title">Random Quiz</div>
+          <button id="homeFromQuiz" class="home-btn" type="button">Home</button>
+        </div>
+        <p style="margin: 0 0 12px; color: var(--muted)">
+          Read the code, then show the answer.
+        </p>
 
-      <div id="result" class="result"></div>
+        <div class="editor">
+          <div class="editor-topbar">
+            <div class="editor-dots">
+              <span class="editor-dot red"></span>
+              <span class="editor-dot yellow"></span>
+              <span class="editor-dot green"></span>
+            </div>
+            <span class="editor-file">question.py</span>
+          </div>
+          <pre id="question" class="question">Loading question...</pre>
+        </div>
 
-      <div class="stats">
-        <span id="score">Score: 0</span>
-        <span id="total">Total: 0</span>
-        <span id="accuracy">Accuracy: 0%</span>
-        <span id="streak">Streak: 0</span>
-        <span id="level">Level: 1</span>
-      </div>
+        <div class="controls">
+          <div id="options" class="controls" style="margin: 0; width: 100%"></div>
+          <button id="nextBtn" class="hidden" type="button">Next Question</button>
+        </div>
+
+        <div id="result" class="result"></div>
+        <div class="stats">
+          <span id="quizCount">Questions shown: 0</span>
+        </div>
+      </section>
+
+      <section
+        id="screenBamboozle"
+        class="screen hidden"
+        aria-label="Points Game"
+      >
+        <div class="screen-topbar">
+          <div class="screen-title">Points Game</div>
+          <button id="homeFromPoints" class="home-btn" type="button">Home</button>
+        </div>
+        <div class="bb-top">
+          <div class="bb-score">
+            <strong id="bbPoints">Team Points</strong>
+            <span id="bbProgress">Used: 0/0</span>
+            <span style="opacity: 0.9">Min 0 · Max 100</span>
+          </div>
+          <div class="controls" style="margin: 0">
+            <button id="bbReset" class="secondary" type="button">Reset Game</button>
+          </div>
+        </div>
+
+        <div class="bb-teambar" aria-label="Team selection">
+          <div class="bb-team-left">
+            <span class="bb-team-pill" id="bbTeamAPoints">Team A: 0</span>
+          </div>
+
+          <div class="bb-team-center">
+            <div class="controls" style="margin: 0">
+              <button id="bbTeamA" class="bb-team-btn" type="button">Team A</button>
+              <button id="bbTeamB" class="bb-team-btn" type="button">Team B</button>
+            </div>
+            <span id="bbTeamHint" style="color: var(--muted); text-align: center">
+              Select a team to start.
+            </span>
+          </div>
+
+          <div class="bb-team-right">
+            <span class="bb-team-pill" id="bbTeamBPoints">Team B: 0</span>
+          </div>
+        </div>
+
+        <div id="bbGrid" class="bb-grid" aria-label="Question cards"></div>
+
+        <div class="result" style="margin-top: 10px; color: var(--muted)">
+          Tip: Teacher clicks <strong>Correct</strong> or <strong>Wrong</strong> to
+          add/subtract that card’s points. Score is clamped to 0–100.
+        </div>
+      </section>
     </main>
+
+    <div id="bbModal" class="bb-modal hidden" role="dialog" aria-modal="true">
+      <div class="bb-modal-content" role="document">
+        <div class="bb-meta">
+          <span id="bbMetaLeft">Pick a card.</span>
+          <span style="display: flex; align-items: center; gap: 8px">
+            <span id="bbMetaRight">Points: —</span>
+            <button id="bbClose" class="bb-close" type="button" aria-label="Close">
+              X
+            </button>
+          </span>
+        </div>
+        <pre id="bbQuestion" class="question">Pick a card to show a question.</pre>
+        <div id="bbAnswer" class="bb-answer hidden">Answer: —</div>
+        <div class="bb-modal-actions">
+          <button id="bbShowAnswer" class="secondary" type="button" disabled>
+            Show Answer
+          </button>
+          <button id="bbCorrect" type="button" disabled>Correct (+)</button>
+          <button id="bbWrong" class="secondary" type="button" disabled>Wrong (−)</button>
+        </div>
+      </div>
+    </div>
 
     <script>
       const questionEl = document.getElementById("question");
       const optionsEl = document.getElementById("options");
       const resultEl = document.getElementById("result");
-      const scoreEl = document.getElementById("score");
-      const totalEl = document.getElementById("total");
-      const accuracyEl = document.getElementById("accuracy");
-      const streakEl = document.getElementById("streak");
-      const levelEl = document.getElementById("level");
+      const quizCountEl = document.getElementById("quizCount");
       const nextBtn = document.getElementById("nextBtn");
 
       let currentAnswer = "";
       let currentOptions = [];
-      let score = 0;
-      let total = 0;
-      let streak = 0;
-      let level = 1;
       let canAnswer = true;
+      let quizCount = 0;
+      let level = 1;
       let audioContext = null;
 
       function getAudioContext() {
@@ -489,7 +810,7 @@
         const a = Math.random() < 0.5;
         const b = Math.random() < 0.5;
         return {
-          text: `# Logical AND\nlet a = ${a};\nlet b = ${b};\nconsole.log(a && b);\n# What is the output?`,
+          text: `# Logical AND\na = ${a ? "True" : "False"}\nb = ${b ? "True" : "False"}\nprint(a and b)\n# What is the output?`,
           answer: a && b,
           rangeHint: 2,
         };
@@ -499,7 +820,7 @@
         const a = Math.random() < 0.5;
         const b = Math.random() < 0.5;
         return {
-          text: `# Logical OR\nlet a = ${a};\nlet b = ${b};\nconsole.log(a || b);\n# What is the output?`,
+          text: `# Logical OR\na = ${a ? "True" : "False"}\nb = ${b ? "True" : "False"}\nprint(a or b)\n# What is the output?`,
           answer: a || b,
           rangeHint: 2,
         };
@@ -579,74 +900,273 @@
       }
 
       function updateLevel() {
-        if (streak >= 8) {
-          level = 3;
-        } else if (streak >= 4) {
-          level = 2;
-        } else {
-          level = 1;
-        }
+        level = 1;
       }
 
       function generateQuestion() {
         resultEl.textContent = "";
         resultEl.className = "result";
         nextBtn.classList.add("hidden");
-        canAnswer = true;
         updateLevel();
         const q = getQuestionByLevel();
         questionEl.innerHTML = renderQuestionCode(q.text);
         currentAnswer = String(q.answer).toLowerCase();
         currentOptions = createOptions(q.answer, q.rangeHint);
+        canAnswer = true;
         renderOptions();
+        quizCount += 1;
+        quizCountEl.textContent = `Questions shown: ${quizCount}`;
       }
 
       function normalize(value) {
-        return value.trim();
-      }
-
-      function updateStats() {
-        scoreEl.textContent = `Score: ${score}`;
-        totalEl.textContent = `Total: ${total}`;
-        const percent = total === 0 ? 0 : Math.round((score / total) * 100);
-        accuracyEl.textContent = `Accuracy: ${percent}%`;
-        streakEl.textContent = `Streak: ${streak}`;
-        levelEl.textContent = `Level: ${level}`;
+        return value.trim().toLowerCase();
       }
 
       function selectAnswer(selectedValue, selectedButton) {
-        if (!canAnswer) {
-          return;
-        }
+        if (!canAnswer) return;
         canAnswer = false;
-        total += 1;
         if (normalize(selectedValue) === currentAnswer) {
-          score += 1;
-          streak += 1;
           playCorrectSound();
+          selectedButton.classList.add("correct");
           resultEl.textContent = "Correct answer!";
           resultEl.className = "result ok";
-          selectedButton.classList.add("correct");
           disableOptions();
-          updateStats();
           setTimeout(generateQuestion, 700);
         } else {
-          streak = 0;
           playWrongSound();
           selectedButton.classList.add("wrong");
           markCorrectAnswer();
-          disableOptions();
-          nextBtn.classList.remove("hidden");
           resultEl.textContent = `Wrong answer. Correct answer: ${currentAnswer}`;
           resultEl.className = "result bad";
-          updateStats();
+          disableOptions();
+          nextBtn.classList.remove("hidden");
         }
       }
 
       nextBtn.addEventListener("click", generateQuestion);
 
-      updateStats();
       generateQuestion();
+
+      // ----------------------------
+      // Screen navigation (no tabs)
+      // ----------------------------
+      const screenHome = document.getElementById("screenHome");
+      const screenQuiz = document.getElementById("screenQuiz");
+      const screenBamboozle = document.getElementById("screenBamboozle");
+      const startQuizBtn = document.getElementById("startQuizBtn");
+      const startPointsBtn = document.getElementById("startPointsBtn");
+      const homeFromQuiz = document.getElementById("homeFromQuiz");
+      const homeFromPoints = document.getElementById("homeFromPoints");
+
+      function showScreen(name) {
+        const isHome = name === "home";
+        const isQuiz = name === "quiz";
+        const isPoints = name === "points";
+
+        screenHome.classList.toggle("hidden", !isHome);
+        screenQuiz.classList.toggle("hidden", !isQuiz);
+        screenBamboozle.classList.toggle("hidden", !isPoints);
+
+        if (!isPoints) {
+          bbClearCurrent();
+        }
+      }
+
+      startQuizBtn.addEventListener("click", () => showScreen("quiz"));
+      startPointsBtn.addEventListener("click", () => showScreen("points"));
+      homeFromQuiz.addEventListener("click", () => showScreen("home"));
+      homeFromPoints.addEventListener("click", () => showScreen("home"));
+
+      // ----------------------------
+      // Points Game (Bamboozle-style)
+      // ----------------------------
+      const bbGrid = document.getElementById("bbGrid");
+      const bbPointsEl = document.getElementById("bbPoints");
+      const bbProgressEl = document.getElementById("bbProgress");
+      const bbQuestionEl = document.getElementById("bbQuestion");
+      const bbAnswerEl = document.getElementById("bbAnswer");
+      const bbMetaLeft = document.getElementById("bbMetaLeft");
+      const bbMetaRight = document.getElementById("bbMetaRight");
+      const bbShowAnswerBtn = document.getElementById("bbShowAnswer");
+      const bbCorrectBtn = document.getElementById("bbCorrect");
+      const bbWrongBtn = document.getElementById("bbWrong");
+      const bbResetBtn = document.getElementById("bbReset");
+      const bbModal = document.getElementById("bbModal");
+      const bbCloseBtn = document.getElementById("bbClose");
+      const bbTeamABtn = document.getElementById("bbTeamA");
+      const bbTeamBBtn = document.getElementById("bbTeamB");
+      const bbTeamHint = document.getElementById("bbTeamHint");
+      const bbTeamAPointsEl = document.getElementById("bbTeamAPoints");
+      const bbTeamBPointsEl = document.getElementById("bbTeamBPoints");
+
+      const BB_MIN = 0;
+      const BB_MAX = 100;
+
+      function clamp(n, min, max) {
+        return Math.min(max, Math.max(min, n));
+      }
+
+      function makeBBQuestion(points, text, answer) {
+        // Keep ids stable-ish without requiring modern crypto APIs.
+        const id = `q_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+        return { id, points, text, answer, used: false };
+      }
+
+      // Grade-4 friendly Python operator questions; each card has different points.
+      const bbQuestionsBase = [
+        makeBBQuestion(5, `x = 7\ny = 3\nprint(x + y)`, "10"),
+        makeBBQuestion(5, `x = 12\ny = 5\nprint(x - y)`, "7"),
+        makeBBQuestion(10, `x = 6\ny = 4\nprint(x * y)`, "24"),
+        makeBBQuestion(10, `x = 20\ny = 4\nprint(x // y)`, "5"),
+        makeBBQuestion(10, `x = 9\ny = 2\nprint(x ** y)`, "81"),
+        makeBBQuestion(15, `x = 15\ny = 4\nprint(x % y)`, "3"),
+        makeBBQuestion(15, `a = True\nb = False\nprint(a and b)`, "False"),
+        makeBBQuestion(15, `a = True\nb = False\nprint(a or b)`, "True"),
+        makeBBQuestion(20, `x = 8\nx += 5\nprint(x)`, "13"),
+        makeBBQuestion(20, `x = 30\nx -= 12\nprint(x)`, "18"),
+        makeBBQuestion(20, `x = 3\nx *= 4\nprint(x)`, "12"),
+        makeBBQuestion(25, `x = 50\nx //= 5\nprint(x)`, "10"),
+        makeBBQuestion(25, `x = 2\nx **= 5\nprint(x)`, "32"),
+        makeBBQuestion(10, `x = 14\ny = 14\nprint(x == y)`, "True"),
+        makeBBQuestion(10, `x = 9\ny = 10\nprint(x > y)`, "False"),
+      ];
+
+      let bbTeamPoints = { A: 0, B: 0 };
+      let bbActiveTeam = null; // "A" | "B"
+      let bbQuestions = [];
+      let bbCurrent = null;
+      let bbShowAnswer = false;
+
+      function bbUpdateScoreUI() {
+        bbTeamAPointsEl.textContent = `Team A: ${bbTeamPoints.A}`;
+        bbTeamBPointsEl.textContent = `Team B: ${bbTeamPoints.B}`;
+        const activeLabel = bbActiveTeam ? `Active: Team ${bbActiveTeam}` : "No team selected";
+        bbPointsEl.textContent = activeLabel;
+      }
+
+      function bbSetActiveTeam(team) {
+        bbActiveTeam = team;
+        bbTeamABtn.classList.toggle("active", team === "A");
+        bbTeamBBtn.classList.toggle("active", team === "B");
+        bbTeamHint.textContent = `Current team: Team ${team}. Now pick a card.`;
+        bbUpdateScoreUI();
+      }
+
+      function bbUpdateProgressUI() {
+        const usedCount = bbQuestions.filter((q) => q.used).length;
+        bbProgressEl.textContent = `Used: ${usedCount}/${bbQuestions.length}`;
+      }
+
+      function bbSetCurrent(q) {
+        if (!bbActiveTeam) {
+          bbTeamHint.textContent = "Select Team A or Team B first.";
+          return;
+        }
+        bbCurrent = q;
+        bbShowAnswer = false;
+        bbMetaLeft.textContent = `Team ${bbActiveTeam}: Answer the question!`;
+        bbMetaRight.textContent = `Points: ${q.points}`;
+        bbQuestionEl.innerHTML = renderQuestionCode(`# Points: ${q.points}\n${q.text}`);
+        bbAnswerEl.classList.add("hidden");
+        bbAnswerEl.textContent = `Answer: ${q.answer}`;
+        bbShowAnswerBtn.disabled = false;
+        bbCorrectBtn.disabled = false;
+        bbWrongBtn.disabled = false;
+        bbShowAnswerBtn.textContent = "Show Answer";
+        bbModal.classList.remove("hidden");
+      }
+
+      function bbClearCurrent() {
+        bbCurrent = null;
+        bbShowAnswer = false;
+        bbMetaLeft.textContent = "Pick a card.";
+        bbMetaRight.textContent = "Points: —";
+        bbQuestionEl.textContent = "Pick a card to show a question.";
+        bbAnswerEl.classList.add("hidden");
+        bbAnswerEl.textContent = "Answer: —";
+        bbShowAnswerBtn.disabled = true;
+        bbCorrectBtn.disabled = true;
+        bbWrongBtn.disabled = true;
+        bbShowAnswerBtn.textContent = "Show Answer";
+        bbModal.classList.add("hidden");
+      }
+
+      function bbRenderGrid() {
+        bbGrid.innerHTML = "";
+        bbQuestions.forEach((q) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "bb-card";
+          btn.textContent = `${q.points} pts`;
+          btn.disabled = q.used;
+          if (q.used) btn.classList.add("used");
+          btn.addEventListener("click", () => {
+            if (q.used) return;
+            bbSetCurrent(q);
+          });
+          bbGrid.appendChild(btn);
+        });
+        bbUpdateProgressUI();
+      }
+
+      function bbMarkUsed(q) {
+        q.used = true;
+        bbRenderGrid();
+        bbClearCurrent();
+      }
+
+      function bbApplyResult(isCorrect) {
+        if (!bbCurrent) return;
+        if (!bbActiveTeam) return;
+        const delta = isCorrect ? bbCurrent.points : -bbCurrent.points;
+        bbTeamPoints[bbActiveTeam] = clamp(
+          bbTeamPoints[bbActiveTeam] + delta,
+          BB_MIN,
+          BB_MAX
+        );
+        bbUpdateScoreUI();
+        bbMarkUsed(bbCurrent);
+      }
+
+      bbShowAnswerBtn.addEventListener("click", () => {
+        if (!bbCurrent) return;
+        bbShowAnswer = !bbShowAnswer;
+        bbAnswerEl.classList.toggle("hidden", !bbShowAnswer);
+        bbShowAnswerBtn.textContent = bbShowAnswer ? "Hide Answer" : "Show Answer";
+      });
+
+      bbCorrectBtn.addEventListener("click", () => bbApplyResult(true));
+      bbWrongBtn.addEventListener("click", () => bbApplyResult(false));
+
+      function bbResetGame() {
+        bbTeamPoints = { A: 0, B: 0 };
+        bbActiveTeam = null;
+        bbTeamABtn.classList.remove("active");
+        bbTeamBBtn.classList.remove("active");
+        bbTeamHint.textContent = "Select a team to start.";
+        bbQuestions = shuffle(bbQuestionsBase).map((q) => ({ ...q, used: false }));
+        bbUpdateScoreUI();
+        bbRenderGrid();
+        bbClearCurrent();
+      }
+
+      bbResetBtn.addEventListener("click", bbResetGame);
+      bbTeamABtn.addEventListener("click", () => bbSetActiveTeam("A"));
+      bbTeamBBtn.addEventListener("click", () => bbSetActiveTeam("B"));
+      bbCloseBtn.addEventListener("click", bbClearCurrent);
+      bbModal.addEventListener("click", (event) => {
+        if (event.target === bbModal) {
+          bbClearCurrent();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !bbModal.classList.contains("hidden")) {
+          bbClearCurrent();
+        }
+      });
+
+      // Initialize points game
+      bbResetGame();
     </script>
   </body>
 </html>
